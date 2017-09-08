@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import 'semantic-ui-css/semantic.min.css';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import jwtDecode from 'jwt-decode';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import rootReducer from './rootReducer';
@@ -17,7 +18,12 @@ const store = createStore(
 );
 
 if (localStorage.bookshelfJWT) {
-  const user = { token: localStorage.bookshelfJWT };
+  const payload = jwtDecode(localStorage.bookshelfJWT);
+  const user = {
+    token: localStorage.bookshelfJWT,
+    email: payload.email,
+    confirmed: payload.confirmed,
+  };
   store.dispatch(userLoggedIn(user));
 }
 
